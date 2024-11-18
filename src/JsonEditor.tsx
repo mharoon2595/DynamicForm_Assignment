@@ -1,10 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import {  L as SyntaxHighlighter } from "react-syntax-highlighter";
 import { tomorrowNightEighties } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import SyntaxHighlighter from "react-syntax-highlighter";
 
-export function JsonEditor() {
-  const [json, setJson] = useState("");
+interface CompProps {
+  onInput: (json: string) => void;
+  errorMsg: string | null;
+}
+
+export function JsonEditor({ onInput, errorMsg }: CompProps) {
+  const [json, setJson] = useState<string>("");
+
+  useEffect(() => {
+    onInput(json);
+  }, [json, onInput]);
 
   return (
     <div className="bg-white rounded-lg shadow-md p-4">
@@ -22,6 +31,7 @@ export function JsonEditor() {
         onChange={(e) => setJson(e.target.value)}
         placeholder="Enter your JSON schema here..."
       />
+      {errorMsg && <p className="text-red-500 mt-2">{errorMsg}</p>}
     </div>
   );
 }
